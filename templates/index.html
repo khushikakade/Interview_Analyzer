@@ -391,6 +391,31 @@ nav{
 .m-step-box{background:rgba(37,99,235,0.05);border:1px solid rgba(37,99,235,0.2);padding:16px;border-radius:12px;margin:15px 0;}
 .m-highlight{color:var(--accent);font-weight:700;}
 
+/* STUDIO SCREEN */
+.studio-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:0;flex:1;}
+.q-panel{background:var(--bg3);border-right:1px solid var(--border);padding:60px 40px;display:flex;flex-direction:column;justify-content:center;}
+.cam-panel{background:#000;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+#studio-video{width:100%;height:100%;object-fit:cover;}
+.hud{position:absolute;inset:0;pointer-events:none;padding:30px;display:flex;flex-direction:column;justify-content:space-between;}
+.hud-top{display:flex;justify-content:space-between;align-items:flex-start;}
+.live-indicator{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,0.5);padding:6px 12px;border-radius:6px;backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.1);}
+.live-dot{width:8px;height:8px;background:var(--red);border-radius:50%;animation:pulseRed 1.5s infinite;}
+.live-text{font-family:'JetBrains Mono',monospace;font-size:11px;color:#fff;letter-spacing:1px;text-transform:uppercase;}
+@keyframes pulseRed{0%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(0.8);}100%{opacity:1;transform:scale(1);}}
+
+.conf-hud{background:rgba(0,0,0,0.5);backdrop-filter:blur(10px);padding:15px;border-radius:12px;border:1px solid rgba(255,255,255,0.1);width:180px;}
+.conf-label{font-size:10px;color:var(--muted2);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;font-family:'JetBrains Mono',monospace;}
+.conf-bar-bg{height:6px;background:rgba(255,255,255,0.1);border-radius:3px;overflow:hidden;}
+.conf-bar-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--green));width:0%;transition:width 0.5s ease;}
+.emotion-hud{margin-top:10px;font-family:'Bebas Neue',sans-serif;font-size:24px;color:#fff;letter-spacing:1px;}
+
+.q-card{max-width:480px;}
+.q-eyebrow{color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:2px;margin-bottom:12px;}
+.q-text{font-size:32px;font-weight:600;line-height:1.3;margin-bottom:30px;color:var(--text);}
+.q-btn-group{display:flex;gap:12px;}
+
+.studio-footer{position:absolute;bottom:0;left:0;right:0;padding:20px;border-top:1px solid var(--border);background:var(--bg);display:flex;justify-content:space-between;align-items:center;z-index:10;}
+
 </style>
 </head>
 <body>
@@ -400,7 +425,6 @@ nav{
 <div class="glow-orb c"></div>
 
 <!-- ═══ HIDDEN FILE INPUT ═══ -->
-<input type="file" id="video-input" style="display:none" accept="video/*">
 
 <!-- ═══ SCREEN 1: LANDING ═══ -->
 <div id="s1" class="screen active">
@@ -424,9 +448,9 @@ nav{
     </div>
     <div class="nav-actions">
       <button class="btn btn-ghost btn-sm" onclick="showDemo()">View demo</button>
-      <button class="btn btn-primary btn-sm" onclick="startAnalysis()">Get started</button>
     </div>
   </nav>
+
   <div class="content">
     <div class="hero-eyebrow">
       <span></span> Multimodal AI Interview Analysis
@@ -435,53 +459,56 @@ nav{
       <span class="line1">Ace Every</span>
       <span class="line2">Interview</span>
     </h1>
-    <p class="hero-sub">Upload your interview recording. Our AI analyzes facial expressions, speech patterns, and communication quality to give you a full performance breakdown.</p>
+    <p class="hero-sub">Select your path to excellence.</p>
 
-    <div class="upload-zone" onclick="startAnalysis()">
-      <div class="upload-icon-wrap">
-        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-          <path d="M14 4 L14 20 M8 10 L14 4 L20 10" stroke="#60a5fa" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M4 22 L4 24 Q4 24 4 24 L24 24 Q24 24 24 24 L24 22" stroke="#60a5fa" stroke-width="2" stroke-linecap="round"/>
-        </svg>
+    <!-- PATH CONTAINER -->
+    <div style="display: flex; flex-direction: column; gap: 30px; width: 100%; max-width: 650px; align-items: center; position: relative;">
+      
+      <!-- OPTION A: THE STUDIO (LIVE) -->
+      <div id="STUDIO-BOX" style="width: 100%; padding: 40px; background: rgba(37,99,235,0.1); border: 2px solid #2563eb; border-radius: 28px; position: relative; z-index: 50; text-align: center;">
+          <div style="font-family:'JetBrains Mono'; color:#60a5fa; font-size: 11px; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 15px;">Option 1: Live Simulation</div>
+          <h2 style="font-family:'Bebas Neue'; font-size: 34px; letter-spacing: 1px; color: #fff; margin-bottom: 12px;">Mock Interview Studio</h2>
+          <p style="color: var(--muted2); font-size: 14px; margin-bottom: 30px; max-width: 400px; margin-left: auto; margin-right: auto;">Launch your camera and get real-time feedback from our AI coach. No recording needed.</p>
+          <button class="btn btn-primary" id="BTN-LAUNCH-STUDIO" onclick="launchInterviewStudio(event)" style="width: 100%; justify-content: center; height: 60px; font-size: 18px; border-radius: 16px; background: linear-gradient(135deg, #1d4ed8, #8b5cf6); box-shadow: 0 10px 40px rgba(37,99,235,0.3);">
+              LAUNCH LIVE STUDIO
+          </button>
       </div>
-      <div class="upload-title">Drop your interview video here</div>
-      <div class="upload-sub">or click to browse files</div>
-      <div class="format-chips">
-        <span class="fmt">MP4</span><span class="fmt">MOV</span>
-        <span class="fmt">AVI</span><span class="fmt">MKV</span><span class="fmt">WEBM</span>
+
+      <!-- SEPARATOR -->
+      <div style="display: flex; align-items: center; gap: 15px; width: 100%; color: var(--muted); opacity: 0.5;">
+          <div style="flex: 1; height: 1px; background: var(--border);"></div>
+          <span style="font-family:'JetBrains Mono'; font-size: 10px;">OR</span>
+          <div style="flex: 1; height: 1px; background: var(--border);"></div>
       </div>
-      <button class="btn btn-primary" style="pointer-events:none;">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v9M4 7l4-4 4 4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 12h12" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
-        Analyze Interview
-      </button>
+
+      <!-- OPTION B: UPLOAD (FILE) -->
+      <div id="UPLOAD-BOX" class="upload-zone" onclick="startAnalysis()" style="width: 100%; padding: 40px; border-radius: 28px; background: rgba(5,8,16,0.3); border: 2px dashed var(--border2); z-index: 10;">
+          <div style="font-family:'JetBrains Mono'; color: var(--muted2); font-size: 11px; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 15px;">Option 2: Video Analysis</div>
+          <h2 style="font-family:'Bebas Neue'; font-size: 30px; letter-spacing: 1px; color: #fff; margin-bottom: 20px;">Upload Existing Recording</h2>
+          <div class="format-chips" style="margin-bottom: 20px;">
+              <span class="fmt">MP4</span><span class="fmt">MOV</span><span class="fmt">WEBM</span>
+          </div>
+          <button class="btn btn-ghost" style="pointer-events: none; width: 100%; justify-content: center; border-radius: 14px;">SELECT FILE TO ANALYZE</button>
+      </div>
+
     </div>
 
+    <!-- TOOLKIT SECTION -->
     <div class="toolkit-grid">
       <div class="toolkit-card tc1">
         <div class="toolkit-icon">🏛</div>
         <div class="toolkit-name">The STAR Method</div>
-        <div class="toolkit-desc">Master behavioral questions by structuring your answers: Situation, Task, Action, and Result. Proven to increase clarity.</div>
+        <div class="toolkit-desc">Master behavioral questions by structuring your answers.</div>
         <div class="toolkit-link" onclick="openToolkit('star')">Read Guide →</div>
       </div>
       <div class="toolkit-card tc2">
         <div class="toolkit-icon">🤝</div>
         <div class="toolkit-name">Salary Negotiation</div>
-        <div class="toolkit-desc">Expert strategies for closing the gap and getting the compensation you deserve without burning bridges.</div>
+        <div class="toolkit-desc">Expert strategies for closing the gap.</div>
         <div class="toolkit-link" onclick="openToolkit('negotiation')">View Tips →</div>
       </div>
-      <div class="toolkit-card tc3">
-        <div class="toolkit-icon">🦒</div>
-        <div class="toolkit-name">Body Language Pro</div>
-        <div class="toolkit-desc">Learn the non-verbal cues that project confidence: from the "Steeple" gesture to mirroring and effective nodding.</div>
-        <div class="toolkit-link" onclick="openToolkit('body')">Learn Cues →</div>
-      </div>
-      <div class="toolkit-card tc4">
-        <div class="toolkit-icon">✉️</div>
-        <div class="toolkit-name">Follow-up Templates</div>
-        <div class="toolkit-desc">High-impact thank-you note templates optimized for different industries and seniority levels.</div>
-        <div class="toolkit-link" onclick="openToolkit('templates')">Get Templates →</div>
-      </div>
     </div>
+
   </div>
 </div>
 
@@ -701,13 +728,11 @@ nav{
           <div class="metric-line"><span class="ml-name">Vocabulary richness</span><span class="ml-val">62.4 / 100</span></div>
         </div>
 
-          <span class="kw">systems</span><span class="kw">fintech</span>
-        </div>
-
         <div class="card-panel" id="keywords-container">
           <div class="sec-label">Key topics</div>
           <span class="kw">microservices</span><span class="kw">engineering</span>
           <span class="kw">architecture</span><span class="kw">latency</span>
+          <span class="kw">systems</span><span class="kw">fintech</span>
         </div>
 
         <div class="card-panel">
@@ -725,6 +750,42 @@ nav{
             <label style="display:flex;align-items:center;gap:10px;font-size:12px;color:#94a3b8;cursor:pointer;">
               <input type="checkbox" style="accent-color:var(--accent);"> Review your performance against these results
             </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ═══ SCREEN 4: MOCK INTERVIEW STUDIO ═══ -->
+<div id="s4" class="screen">
+  <div class="studio-grid">
+    <div class="q-panel">
+      <div class="q-card">
+        <div class="q-eyebrow" id="q-num">Question 1 of 5</div>
+        <div class="q-text" id="q-display">Tell me about yourself and your background.</div>
+        <div class="q-btn-group">
+          <button class="btn btn-primary" onclick="nextQuestion()" id="next-q-btn">Next Question →</button>
+          <button class="btn btn-ghost" onclick="finishInterview()" id="finish-btn" style="border-color:var(--red); color:var(--red);">Finish Session</button>
+        </div>
+      </div>
+    </div>
+    <div class="cam-panel">
+      <video id="studio-video" autoplay muted></video>
+      <div class="hud">
+        <div class="hud-top">
+          <div class="live-indicator">
+            <div class="live-dot"></div>
+            <div class="live-text">Live Analysis Active</div>
+          </div>
+          <div class="live-indicator" style="background:rgba(37,99,235,0.2); border-color:var(--accent);">
+            <div class="live-text" id="studio-timer">00:00</div>
+          </div>
+        </div>
+        <div class="hud-bottom">
+          <div class="conf-hud">
+            <div class="conf-label">Live Confidence</div>
+            <div class="conf-bar-bg"><div class="conf-bar-fill" id="live-conf-bar" style="width: 50%;"></div></div>
+            <div class="emotion-hud" id="live-emotion">Detecting...</div>
           </div>
         </div>
       </div>
@@ -751,9 +812,7 @@ function closeModal(){document.getElementById('toolkit-modal').classList.remove(
 function openToolkit(key){
   const titles = {
     star: 'The STAR Method: Your Storytelling Superpower 🦸‍♂️',
-    negotiation: 'Salary Negotiation: The High-Stakes Conversation 💰',
-    body: 'Body Language Pro: Mastering Non-Verbal Cues 👁',
-    templates: 'Follow-up Templates: The Art of the Thank-You ✉️'
+    negotiation: 'Salary Negotiation: The High-Stakes Conversation 💰'
   };
   const content = {
     star: `
@@ -770,8 +829,6 @@ function openToolkit(key){
       <div class="m-step-box">
         <strong>R - Result (20%):</strong> The happy ending. "Service resumed in 12 min. No data lost. We saved $50k in potential lost revenue."
       </div>
-      <h4>Pro Tip:</h4>
-      <p>Always have 3-5 STAR stories ready. Aim for a mix of "Problem I Solved" and "Mistake I Learned From."</p>
     `,
     negotiation: `
       <p>Negotiation is not a battle; it's a value alignment. If you've been offered the job, <span class="m-highlight">the power has shifted to you.</span></p>
@@ -780,37 +837,7 @@ function openToolkit(key){
         <li><strong>Research is Ammo:</strong> Use levels.fyi and Glassdoor. Know the market rate for your years of experience and location.</li>
         <li><strong>The Pivot:</strong> When they ask for your range early, say: "I'm more focused on the role and value alignment right now. What is the budget you have allocated for this position?"</li>
         <li><strong>The Verbal Lock:</strong> Once an offer is made, don't say yes immediately. Say: "This is a great starting point. Based on my expertise in [X], I was expecting something closer to $Y. If we can get to that number, I'm ready to sign today."</li>
-        <li><strong>Beyond the Check:</strong> Negotiate for sign-on bonuses, remote flexibility, or extra PTO if the base salary is capped.</li>
       </ol>
-      <h4>What if they say NO?</h4>
-      <p>Don't panic. Ask: "I understand. Is there flexibility in other parts of the package, such as equity or performance bonuses? Or, can we agree on a salary review in 6 months based on specific KPIs?"</p>
-    `,
-    body: `
-      <p>Non-verbal communication accounts for over 50% of the impression you make. In professional interviews, it's about <span class="m-highlight">Presence and Poise.</span></p>
-      <h4>Key Cues to Master:</h4>
-      <ul>
-        <li><strong>The 'Steeple' Gesture:</strong> Pressing fingertips together lightly. It projects supreme confidence and authority.</li>
-        <li><strong>The Mirroring Rule:</strong> Subtly match the interviewer's energy and posture. It builds subconscious trust.</li>
-        <li><strong>Eye Contact (60/40):</strong> Maintain eye contact 60% of the time. Too much is aggressive; too little is shy.</li>
-        <li><strong>The 'Fronting' Technique:</strong> Point your torso, hips, and toes directly at the person you are speaking to. It signals total engagement.</li>
-      </ul>
-      <p><em>Pro Tip: In virtual interviews, look at the camera, not the screen, to simulate direct eye contact.</em></p>
-    `,
-    templates: `
-      <p>A thank-you note is your "Second Impression." Send it within <span class="m-highlight">2-12 hours</span> of the interview.</p>
-      <h4>Template 1: The Technical Deep-Dive</h4>
-      <div class="m-step-box" style="font-family:'JetBrains Mono'; font-size:12px;">
-        "Hi [Name], thank you for the insightful conversation today. I particularly enjoyed our discussion on [Technical Topic X]. After our talk, I thought more about the [Problem Y] you mentioned and believe my experience in [Skill Z] could directly address it..."
-      </div>
-      <h4>Template 2: The Connection Builder</h4>
-      <div class="m-step-box" style="font-family:'JetBrains Mono'; font-size:12px;">
-        "Hi [Name], thank you for meeting with me today. It was great to hear about the team's culture and the [Project Name] initiative. I'm very excited about the possibility of contributing to [Company]..."
-      </div>
-      <h4>Template 3: The "Gracious Rejection" (Post-Decision)</h4>
-      <div class="m-step-box" style="font-family:'JetBrains Mono'; font-size:12px;">
-        "Dear [Name], thank you for letting me know the decision. While I'm disappointed, I truly enjoyed learning about [Company]. I'd love to stay in touch as I continue to admire the work you're doing in [Industry]."
-      </div>
-      <p><strong>Note:</strong> Always personalize! Mention one specific point discussed to prove you were truly engaged.</p>
     `
   };
 
@@ -841,61 +868,11 @@ let loaderStep=0,loaderT;
 const stepLabels=['Analyzing faces…','Transcribing speech…','NLP analysis…','Scoring…'];
 const stepPcts=[22,55,82,100];
 
+// Static file input is now at the bottom of the body in HTML
 function startAnalysis(){
+  console.log("TRIGGER: Opening File Picker...");
   document.getElementById('video-input').click();
 }
-
-document.getElementById('video-input').onchange = async function(e){
-  const file = e.target.files[0];
-  if(!file) return;
-
-  // Start loading animation
-  showScreen('s2');
-  loaderStep=0;
-  document.querySelectorAll('.step-row').forEach(r=>r.className='step-row idle');
-  document.getElementById('pfill').style.width='0%';
-  document.getElementById('ppct').textContent='0%';
-  document.getElementById('pstep').textContent='Starting…';
-  
-  // Fake loader progress while waiting for API
-  let fakeProgress = 0;
-  const progressIval = setInterval(() => {
-    if(fakeProgress < 90) {
-      fakeProgress += Math.random() * 2;
-      updateLoader(fakeProgress);
-    }
-  }, 1000);
-
-  // Real API call
-  const formData = new FormData();
-  formData.append('video', file);
-
-  try {
-    const res = await fetch('/analyze', {
-      method: 'POST',
-      body: formData
-    });
-    const data = await res.json();
-    clearInterval(progressIval);
-
-    if(data.success) {
-      updateLoader(100);
-      populateResults(data);
-      setTimeout(() => {
-        showScreen('s3');
-        requestAnimationFrame(()=>{animateGauges();drawRadar();drawTimeline();});
-      }, 500);
-    } else {
-      alert("Analysis failed: " + data.error);
-      goBack();
-    }
-  } catch(err) {
-    clearInterval(progressIval);
-    console.error(err);
-    alert("An error occurred during analysis. Make sure the server is healthy.");
-    goBack();
-  }
-};
 
 function updateLoader(pct) {
     document.getElementById('pfill').style.width = pct + '%';
@@ -1166,6 +1143,187 @@ function switchTab(n){
   if(n===1)setTimeout(drawRadar,50);
   if(n===2)setTimeout(drawTimeline,50);
 }
+
+/* ── MOCK INTERVIEW STUDIO LOGIC ── */
+let mediaRecorder;
+let recordedChunks = [];
+let studioStream;
+let captureInterval;
+let studioTimerInterval;
+let studioSeconds = 0;
+let currentQ = 0;
+
+const questions = [
+  "Tell me about yourself and your background.",
+  "Why do you want to work for our company?",
+  "Tell me about a difficult situation you faced and how you handled it.",
+  "What is your greatest strength and weakness?",
+  "Where do you see yourself in five years?",
+  "Describe a time you solved a complex technical problem.",
+  "Do you have any questions for us?"
+];
+
+async function launchInterviewStudio(e){
+  if(e) { e.preventDefault(); e.stopPropagation(); }
+  console.log("CRITICAL: Launching Mock Interview Studio...");
+  try {
+    studioStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    const videoEl = document.getElementById('studio-video');
+    videoEl.srcObject = studioStream;
+    
+    // Setup recording
+    recordedChunks = [];
+    mediaRecorder = new MediaRecorder(studioStream, { mimeType: 'video/webm' });
+    mediaRecorder.ondataavailable = e => { 
+      if(e.data && e.data.size > 0) {
+        recordedChunks.push(e.data);
+      }
+    };
+    mediaRecorder.onstop = () => {
+      console.log(`Recording stopped. Total chunks: ${recordedChunks.length}`);
+      const blob = new Blob(recordedChunks, { type: 'video/webm' });
+      const file = new File([blob], "live_interview.webm", { type: 'video/webm' });
+      analyzeFile(file);
+    };
+    mediaRecorder.start(1000); // 1s chunks
+    
+    // UI State
+    currentQ = 0;
+    studioSeconds = 0;
+    updateQuestionUI();
+    showScreen('s4');
+    
+    // Intervals
+    startStudioTimer();
+    captureInterval = setInterval(captureFramePulse, 2000); // Analyze frame every 2s
+    
+  } catch(err) {
+    console.error(err);
+    alert("Camera/Mic access denied. Please allow permissions to start the interview.");
+  }
+}
+
+function updateQuestionUI(){
+  document.getElementById('q-num').textContent = `Question ${currentQ+1} of ${questions.length}`;
+  document.getElementById('q-display').textContent = questions[currentQ];
+  document.getElementById('next-q-btn').textContent = (currentQ === questions.length - 1) ? "Final Question ✓" : "Next Question →";
+}
+
+function nextQuestion(){
+  if(currentQ < questions.length - 1) {
+    currentQ++;
+    updateQuestionUI();
+  } else {
+    finishInterview();
+  }
+}
+
+function startStudioTimer(){
+  studioSeconds = 0;
+  clearInterval(studioTimerInterval);
+  studioTimerInterval = setInterval(() => {
+    studioSeconds++;
+    const m = Math.floor(studioSeconds / 60).toString().padStart(2, '0');
+    const s = (studioSeconds % 60).toString().padStart(2, '0');
+    document.getElementById('studio-timer').textContent = `${m}:${s}`;
+  }, 1000);
+}
+
+function captureFramePulse(){
+  const video = document.getElementById('studio-video');
+  const canvas = document.createElement('canvas');
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(video, 0, 0);
+  
+  console.log("HUD: Capturing frame...");
+  const imageData = canvas.toDataURL('image/jpeg', 0.5);
+  
+  fetch('/analyze-frame', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ image: imageData })
+  })
+  .then(r => r.json())
+  .then(res => {
+    if(res.success) {
+      // Update HUD
+      const bar = document.getElementById('live-conf-bar');
+      bar.style.width = res.confidence + '%';
+      
+      const emo = document.getElementById('live-emotion');
+      emo.textContent = res.emotion.toUpperCase();
+      
+      // Color logic
+      if(res.confidence > 70) bar.style.background = 'var(--green)';
+      else if(res.confidence > 40) bar.style.background = 'var(--amber)';
+      else bar.style.background = 'var(--red)';
+    }
+  })
+  .catch(err => console.warn("Live analysis pulse failed"));
+}
+
+async function finishInterview(){
+  console.log("Finishing interview... stopping recorder.");
+  // Stop recording - this will trigger onstop
+  if(mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+  
+  // Wait a moment before killing stream to allow final chunking
+  setTimeout(() => {
+    if(studioStream) studioStream.getTracks().forEach(t => t.stop());
+    clearInterval(captureInterval);
+    clearInterval(studioTimerInterval);
+  }, 200);
+}
+
+// Extract analysis logic into a reusable function
+async function analyzeFile(file) {
+  showScreen('s2');
+  loaderStep = 0;
+  document.querySelectorAll('.step-row').forEach(r => r.className = 'step-row idle');
+  document.getElementById('pfill').style.width = '0%';
+  document.getElementById('ppct').textContent = '0%';
+  document.getElementById('pstep').textContent = 'Finalizing Recording…';
+  
+  let fakeProgress = 0;
+  const progressIval = setInterval(() => {
+    if(fakeProgress < 90) {
+      fakeProgress += Math.random() * 2;
+      updateLoader(fakeProgress);
+    }
+  }, 1000);
+
+  const formData = new FormData();
+  formData.append('video', file);
+
+  try {
+    const res = await fetch('/analyze', {
+      method: 'POST',
+      body: formData
+    });
+    const data = await res.json();
+    clearInterval(progressIval);
+
+    if(data.success) {
+      updateLoader(100);
+      populateResults(data);
+      setTimeout(() => {
+        showScreen('s3');
+        requestAnimationFrame(() => { animateGauges(); drawRadar(); drawTimeline(); });
+      }, 500);
+    } else {
+      alert("Analysis failed: " + data.error);
+      goBack();
+    }
+  } catch(err) {
+    clearInterval(progressIval);
+    console.error(err);
+    alert("An error occurred during final analysis.");
+    goBack();
+  }
+}
 </script>
+  <input type="file" id="video-input" style="display:none;" accept="video/*" onchange="const file=this.files[0]; if(file) analyzeFile(file);">
 </body>
 </html>

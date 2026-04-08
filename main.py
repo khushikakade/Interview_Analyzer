@@ -38,8 +38,13 @@ def analyze_video():
     temp_dir = tempfile.gettempdir()
     temp_path = os.path.join(temp_dir, f"upload_{int(time.time())}_{video_file.filename}")
     video_file.save(temp_path)
+    file_size = os.path.getsize(temp_path)
     
-    logger.info(f"Analyzing uploaded video: {temp_path}")
+    logger.info(f"Analyzing uploaded video: {temp_path} | Size: {file_size} bytes | Mime: {video_file.mimetype}")
+    
+    if file_size == 0:
+        logger.error("Uploaded video file is empty (0 bytes)")
+        return jsonify({"success": False, "error": "Uploaded video file is empty. Check camera/mic permissions."}), 400
     
     try:
         # Initialize pipeline
@@ -105,6 +110,7 @@ def analyze_video():
         logger.error(f"Analysis failed: {str(e)}")
         return jsonify({"success": False, "error": str(e)}), 500
     
+
     finally:
         # Clean up temp file
         if os.path.exists(temp_path):
@@ -112,6 +118,34 @@ def analyze_video():
                 os.unlink(temp_path)
             except:
                 pass
+
+
+@app.route('/analyze-frame', methods=['POST'])
+def analyze_frame_data():
+    """Real-time frame analysis for live HUD."""
+    import base64
+    import numpy as np
+    import cv2
+    from modules.cv_module import CVAnalyzer
+
+    data = request.json
+    if not data or 'image' not in data:
+        return jsonify({"success": False, "error": "No image data"}), 400
+
+    try:
+        # Decode base64 image
+        header, encoded = data['image'].split(",", 1)
+        image_data = base64.b64decode(encoded)
+        nparr = np.frombuffer(image_data, np.uint8)
+        img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+
+        # Initialize analyzer (ideally cache this but for now recreate)
+        analyzer = CVAnalyzer()
+        res = analyzer.analyze_single_frame(img)
+
+        return jsonify(res)
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
 
 @app.route('/demo-data', methods=['GET'])
 def get_demo_data():
@@ -166,5 +200,5 @@ if __name__ == '__main__':
     from modules.ml_module import load_or_train_models
     load_or_train_models()
     
-    logger.info("Starting InterviewIQ Server on http://localhost:5000")
-    app.run(host='0.0.0.0', port=5000, debug=False)
+    logger.info("Starting InterviewIQ Server on http://localhost:5001")
+    app.run(host='0.0.0.0', port=5001, debug=False)

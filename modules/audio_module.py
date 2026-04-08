@@ -93,7 +93,7 @@ class AudioProcessor:
                     codec="pcm_s16le",
                     logger=None,
                 )
-            logger.info(f"Audio extracted to: {output_path}")
+            logger.info(f"Audio extracted to: {output_path} | Size: {os.path.getsize(output_path)} bytes")
             return output_path
         except Exception as e:
             logger.error(f"Audio extraction failed: {e}")
@@ -125,6 +125,8 @@ class AudioProcessor:
             result.transcript = transcription.get("text", "").strip()
             result.language = transcription.get("language", "en")
             result.transcription_success = True
+            
+            logger.info(f"Whisper raw transcript length: {len(result.transcript)} chars")
 
             # Parse segments
             raw_segments = transcription.get("segments", [])
